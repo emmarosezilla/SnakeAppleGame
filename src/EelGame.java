@@ -40,7 +40,7 @@ public class EelGame implements Runnable, KeyListener {
         backgroundPic = Toolkit.getDefaultToolkit().getImage("background.png");
         sharkPic = Toolkit.getDefaultToolkit().getImage("shark.png");
         startPic = Toolkit.getDefaultToolkit().getImage("start image.png");
-        eelies = new Eel[5];
+        eelies = new Eel[50];
         egg = new Egg();
         eelies[0] = new Eel(300, 100);
 
@@ -49,12 +49,13 @@ public class EelGame implements Runnable, KeyListener {
             //System.out.println(x * 50 + 300);
             System.out.println(eelies[x].xpos);
             eelies[x].pic = Toolkit.getDefaultToolkit().getImage("eelbody.png");
-            //eelies[x].isAlive = false;
+            eelies[x].isAlive = false;
         }
 //        for (int x = 0; x < eelies.length; x++) {
 //            System.out.println(eelies[x].xpos + ", " + eelies[x].ypos);
 //        }
         eelies[0].isAlive = true;
+        eelies[0].pic = Toolkit.getDefaultToolkit().getImage("eelbody.png");
         numEels = 1;
 
         egg.pic = Toolkit.getDefaultToolkit().getImage("egg.png");
@@ -84,46 +85,50 @@ public class EelGame implements Runnable, KeyListener {
         sharkie.move();
         eelies[0].movies();
 
-        // for (int x = eelies.length - 1; x > 0; x--) {
-//            eelies[x].xpos = eelies[x-1].xpos ;
-//            eelies[x].ypos = eelies[x-1].ypos;
-        for (int x = 1; x < eelies.length; x++){
-            if (eelies[x-1].dx < 0) {//moving left
-                System.out.println("left");
-                eelies[x].xpos=eelies[x-1].right.x;
-                eelies[x].ypos=eelies[x-1].right.y;
-                eelies[x].dx = eelies[x-1].dx;
-                eelies[x].dy = eelies[x-1].dy;
-            }
+        for (int x = eelies.length - 1; x > 0; x--) {
+            eelies[x].xpos = eelies[x - 1].xpos;
+            eelies[x].ypos = eelies[x - 1].ypos;
+            eelies[x].eelhit = new Rectangle(eelies[x].xpos,eelies[x].ypos,eelies[x].width,eelies[x].height);
+//        for (int x = 1; x < eelies.length; x++){
+//            if (eelies[x-1].dx < 0) {//moving left
+//                System.out.println("left");
+//
+//                eelies[x].xpos=eelies[x-1].right.x;
+//                eelies[x].ypos=eelies[x-1].right.y;
+//                eelies[x].dx = eelies[x-1].dx;
+//                eelies[x].dy = eelies[x-1].dy;
+//            }
+//
+//            else if (eelies[x-1].dx > 0){
+//                System.out.println("right");
+//                eelies[x].xpos=eelies[x-1].left.x;
+//                eelies[x].ypos=eelies[x-1].left.y;
+//                eelies[x].dx = eelies[x-1].dx;
+//                eelies[x].dy = eelies[x-1].dy;
+//            }
+//
+//            else if (eelies[x-1].dy < 0){
+//                System.out.println("up");
+//               eelies[x].xpos=eelies[x-1].above.x;
+//                eelies[x].ypos=eelies[x-1].above.y;
+//                eelies[x].dx = eelies[x-1].dx;
+//                eelies[x].dy = eelies[x-1].dy;
+//            }
+//
+//            else{
+//                System.out.println("down");
+//                eelies[x].xpos=eelies[x-1].below.x;
+//                eelies[x].ypos=eelies[x-1].below.y;
+//                eelies[x].dx = eelies[x-1].dx;
+//                eelies[x].dy = eelies[x-1].dy;
+//            }
+//            eelies[x].followerRectangleUpdate();
+//            System.out.println(x+":"+eelies[x].xpos+ " , " +eelies[x].ypos);
+//
+//
+//            eelies[x].eelhit = new Rectangle (eelies[x].xpos, eelies[x].ypos, eelies[x].width,eelies[x].height);
+//        }
 
-            else if (eelies[x-1].dx > 0){
-                System.out.println("right");
-                eelies[x].xpos=eelies[x-1].left.x;
-                eelies[x].ypos=eelies[x-1].left.y;
-                eelies[x].dx = eelies[x-1].dx;
-                eelies[x].dy = eelies[x-1].dy;
-            }
-
-            else if (eelies[x-1].dy < 0){
-                System.out.println("up");
-                eelies[x].xpos=eelies[x-1].above.x;
-                eelies[x].ypos=eelies[x-1].above.y;
-                eelies[x].dx = eelies[x-1].dx;
-                eelies[x].dy = eelies[x-1].dy;
-            }
-
-            else{
-                System.out.println("down");
-                eelies[x].xpos=eelies[x-1].below.x;;
-                eelies[x].ypos=eelies[x-1].below.y;
-                eelies[x].dx = eelies[x-1].dx;
-                eelies[x].dy = eelies[x-1].dy;
-            }
-            eelies[x].followerRectangleUpdate();
-            System.out.println(x+":"+eelies[x].xpos+ " , " +eelies[x].ypos);
-
-
-            eelies[x].eelhit = new Rectangle (eelies[x].xpos, eelies[x].ypos, eelies[x].width,eelies[x].height);
         }
 
         egg.move();
@@ -139,34 +144,38 @@ public class EelGame implements Runnable, KeyListener {
                 eelies[numEels].isAlive = true;
                 numEels++;
                 eatEggSound.play();
+                System.out.println("egggggggg" + numEels);
                 egg.isAlive = false;
                 egg = new Egg();
                 egg.pic = Toolkit.getDefaultToolkit().getImage("egg.png");
-
+            }
 
                 if (eelies[x].eelhit.intersects(egg.hitbox) == false){
                     eatEggSound.play();
                     egg.isCrashing = false;
-                    sharkie.isCollided = true;
-                    eelies[numEels].isAlive = false;
+                  //  sharkie.isCollided = true;
+                    //eelies[numEels-1].isAlive = false;
                     egg.isAlive = true;
                 }
-            }
-
 
         }
         for (int y = 0; y < eelies.length; y++) {
 
-            if (eelies[y].eelhit.intersects(sharkie.sharkhit) && eelies[y].isAlive && sharkie.isAlive == true) {
+            if (eelies[y].eelhit.intersects(sharkie.sharkhit) && eelies[y].isAlive && sharkie.isAlive == true && sharkie.isCollided == false) {
                 System.out.println("YOU WERE EATEN");
                 eelies[numEels].isAlive = false;
+                sharkie.isCollided = true;
                 numEels--;
                 sharkEatSound.play();
+            }
+
+            if (eelies[y].eelhit.intersects(sharkie.sharkhit) == false){
+                sharkie.isCollided = false;
             }
         }
 
         for (int z = 0; z < eelies.length; z++) {
-            if (eelies[0].eelhit.intersects(eelies[z].eelhit) == false && eelies[z].isAlive) {
+            if (eelies[0].eelhit.intersects(eelies[z].eelhit) == false && eelies[z].isAlive ) {
                 eelies[numEels].isAlive = false;
 
             }
@@ -194,19 +203,24 @@ public class EelGame implements Runnable, KeyListener {
                 g.drawImage(sharkPic, sharkie.xpos, sharkie.ypos, sharkie.width, sharkie.height, null);
 
 
-                for (int x = eelies.length -1 ; x >= 0; x--) {
-//                    if (eelies[x].isAlive == true) {
-//                        g.drawImage(eelies[x].pic, eelies[x].xpos, eelies[x].ypos, eelies[x].width, eelies[x].height, null);
-//                    }
-                    g.drawImage(eelies[x].pic, eelies[x].xpos, eelies[x].ypos, eelies[x].width, eelies[x].height, null);
-                    System.out.println(eelies[x].xpos+", "+eelies[x].ypos);
+                for (int x = 0; x< eelies.length; x++) {
+                    if (eelies[x].isAlive == true) {
+                        g.drawImage(eelies[x].pic, eelies[x].xpos, eelies[x].ypos, eelies[x].width, eelies[x].height, null);
+                        g.drawRect(eelies[x].eelhit.x, eelies[x].eelhit.y, eelies[x].eelhit.width, eelies[x].eelhit.height);
+                        System.out.println(x);
+                    }
+//                    g.drawImage(eelies[x].pic, eelies[x].xpos, eelies[x].ypos, eelies[x].width, eelies[x].height, null);
+//                    System.out.println(eelies[x].xpos+", "+eelies[x].ypos);
+//                    System.out.println(x);
 
                 }
-                g.drawRect(eelies[0].eelhit.x, eelies[0].eelhit.y, eelies[0].eelhit.width, eelies[0].eelhit.height);
-                g.drawRect(eelies[0].above.x, eelies[0].above.y, eelies[0].above.width, eelies[0].above.height);
-                g.drawRect(eelies[0].below.x, eelies[0].below.y, eelies[0].below.width, eelies[0].below.height);
-                g.drawRect(eelies[0].right.x, eelies[0].right.y, eelies[0].right.width, eelies[0].right.height);
-                g.drawRect(eelies[0].left.x, eelies[0].left.y, eelies[0].left.width, eelies[0].left.height);
+//                g.drawImage(eelies[0].pic, eelies[0].xpos, eelies[0].ypos, eelies[0].width, eelies[0].height, null);
+//                System.out.println("00000"+eelies[0].xpos+", "+eelies[0].ypos);
+//                g.drawRect(eelies[0].eelhit.x, eelies[0].eelhit.y, eelies[0].eelhit.width, eelies[0].eelhit.height);
+//                g.drawRect(eelies[0].above.x, eelies[0].above.y, eelies[0].above.width, eelies[0].above.height);
+//                g.drawRect(eelies[0].below.x, eelies[0].below.y, eelies[0].below.width, eelies[0].below.height);
+//                g.drawRect(eelies[0].right.x, eelies[0].right.y, eelies[0].right.width, eelies[0].right.height);
+//                g.drawRect(eelies[0].left.x, eelies[0].left.y, eelies[0].left.width, eelies[0].left.height);
 
                 if (egg.isAlive == true) {
                     g.drawImage(egg.pic, egg.xpos, egg.ypos, egg.width, egg.height, null);

@@ -17,6 +17,7 @@ public class Character {
     public boolean isCollided;
 
 
+
     public Character (String paramName, int paramXpos, int paramYpos){
         name = paramName;
         xpos = paramXpos;
