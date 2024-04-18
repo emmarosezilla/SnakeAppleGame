@@ -3,8 +3,8 @@ public class Eel {
     public Image pic;
     public int dx = 2;
     public int dy = 0;
-    public int xpos;
-    public int ypos;
+    public int xpos ;
+    public int ypos ;
     public int width = 35;
     public int height = 35;
     public boolean isAlive = true;
@@ -13,12 +13,24 @@ public class Eel {
     public boolean downIsPressed;
     public boolean rightIsPressed;
     public boolean leftIsPressed;
+    public Rectangle above;
+    public Rectangle below;
+    public Rectangle left;
+    public Rectangle right;
+
+
 
 
     public Eel(int paramXpos, int paramYpos) {
         xpos = paramXpos;
         ypos = paramYpos;
         eelhit = new Rectangle(xpos, ypos, width, height);
+        above = new Rectangle(xpos, ypos+10, width, height);
+        below = new Rectangle(xpos, ypos-10, width, height);
+        right = new Rectangle(xpos+10, ypos, width, height);
+        left = new Rectangle(xpos-10, ypos, width, height);
+        isAlive = true;
+
 
     }
 
@@ -62,7 +74,18 @@ public class Eel {
             dx = -dx;
         }
         eelhit = new Rectangle(xpos, ypos, width, height);
+        above = new Rectangle(xpos, ypos+10, width, height);
+        below = new Rectangle(xpos, ypos-10, width, height);
+        right = new Rectangle(xpos+10, ypos, width, height);
+        left = new Rectangle(xpos-10, ypos, width, height);
 
+    }
+    public void followerRectangleUpdate() {
+        eelhit = new Rectangle(xpos, ypos, width, height);
+        above = new Rectangle(xpos, ypos+10, width, height);
+        below = new Rectangle(xpos, ypos-10, width, height);
+        right = new Rectangle(xpos+10, ypos, width, height);
+        left = new Rectangle(xpos-10, ypos, width, height);
     }
 
 }

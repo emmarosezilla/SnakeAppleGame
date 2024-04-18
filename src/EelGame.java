@@ -40,14 +40,20 @@ public class EelGame implements Runnable, KeyListener {
         backgroundPic = Toolkit.getDefaultToolkit().getImage("background.png");
         sharkPic = Toolkit.getDefaultToolkit().getImage("shark.png");
         startPic = Toolkit.getDefaultToolkit().getImage("start image.png");
-        eelies = new Eel[20];
+        eelies = new Eel[5];
         egg = new Egg();
+        eelies[0] = new Eel(300, 100);
 
-        for (int x = 0; x < eelies.length; x++) {
-            eelies[x] = new Eel(x * 20 + 100, 100);
+        for (int x = 1; x < eelies.length; x++) {
+            eelies[x] = new Eel(eelies[x-1].right.x, eelies[x-1].right.y);
+            //System.out.println(x * 50 + 300);
+            System.out.println(eelies[x].xpos);
             eelies[x].pic = Toolkit.getDefaultToolkit().getImage("eelbody.png");
-            eelies[x].isAlive = false;
+            //eelies[x].isAlive = false;
         }
+//        for (int x = 0; x < eelies.length; x++) {
+//            System.out.println(eelies[x].xpos + ", " + eelies[x].ypos);
+//        }
         eelies[0].isAlive = true;
         numEels = 1;
 
@@ -76,34 +82,49 @@ public class EelGame implements Runnable, KeyListener {
 
     public void moveThings() {
         sharkie.move();
+        eelies[0].movies();
 
-        for (int x = eelies.length - 1; x > 0; x--) {
-
-
-            if (eelies[0].dx < 0) {
-               eelies[x].xpos=eelies[x-1].xpos + 20;;
-                eelies[x].ypos=eelies[x-1].ypos;
+        // for (int x = eelies.length - 1; x > 0; x--) {
+//            eelies[x].xpos = eelies[x-1].xpos ;
+//            eelies[x].ypos = eelies[x-1].ypos;
+        for (int x = 1; x < eelies.length; x++){
+            if (eelies[x-1].dx < 0) {//moving left
+                System.out.println("left");
+                eelies[x].xpos=eelies[x-1].right.x;
+                eelies[x].ypos=eelies[x-1].right.y;
+                eelies[x].dx = eelies[x-1].dx;
+                eelies[x].dy = eelies[x-1].dy;
             }
 
-            else if (eelies[0].dx > 0){
-                eelies[x].xpos=eelies[x-1].xpos - 20;;
-                eelies[x].ypos=eelies[x-1].ypos;
+            else if (eelies[x-1].dx > 0){
+                System.out.println("right");
+                eelies[x].xpos=eelies[x-1].left.x;
+                eelies[x].ypos=eelies[x-1].left.y;
+                eelies[x].dx = eelies[x-1].dx;
+                eelies[x].dy = eelies[x-1].dy;
             }
 
-            else if (eelies[0].dy < 0){
-                eelies[x].xpos=eelies[x-1].xpos;;
-                eelies[x].ypos=eelies[x-1].ypos + 20;
+            else if (eelies[x-1].dy < 0){
+                System.out.println("up");
+                eelies[x].xpos=eelies[x-1].above.x;
+                eelies[x].ypos=eelies[x-1].above.y;
+                eelies[x].dx = eelies[x-1].dx;
+                eelies[x].dy = eelies[x-1].dy;
             }
 
             else{
-                eelies[x].xpos=eelies[x-1].xpos;;
-                eelies[x].ypos=eelies[x-1].ypos  - 20;
+                System.out.println("down");
+                eelies[x].xpos=eelies[x-1].below.x;;
+                eelies[x].ypos=eelies[x-1].below.y;
+                eelies[x].dx = eelies[x-1].dx;
+                eelies[x].dy = eelies[x-1].dy;
             }
+            eelies[x].followerRectangleUpdate();
+            System.out.println(x+":"+eelies[x].xpos+ " , " +eelies[x].ypos);
 
 
             eelies[x].eelhit = new Rectangle (eelies[x].xpos, eelies[x].ypos, eelies[x].width,eelies[x].height);
         }
-        eelies[0].movies();
 
         egg.move();
 
@@ -121,7 +142,6 @@ public class EelGame implements Runnable, KeyListener {
                 egg.isAlive = false;
                 egg = new Egg();
                 egg.pic = Toolkit.getDefaultToolkit().getImage("egg.png");
-
 
 
                 if (eelies[x].eelhit.intersects(egg.hitbox) == false){
@@ -144,6 +164,13 @@ public class EelGame implements Runnable, KeyListener {
                 sharkEatSound.play();
             }
         }
+
+        for (int z = 0; z < eelies.length; z++) {
+            if (eelies[0].eelhit.intersects(eelies[z].eelhit) == false && eelies[z].isAlive) {
+                eelies[numEels].isAlive = false;
+
+            }
+        }
     }
 
     private void render() {
@@ -162,16 +189,24 @@ public class EelGame implements Runnable, KeyListener {
                 g.setFont(new Font("Hey Comic", Font.PLAIN, 40));
                 g.drawString("PRESS THE SPACEBAR TO BEGIN!", 220, 100);
                 g.drawImage(startPic, 420, 140, 150, 160, null);
+
             } else if (gamePlaying == true && gameOver == false) {
                 g.drawImage(sharkPic, sharkie.xpos, sharkie.ypos, sharkie.width, sharkie.height, null);
 
 
-                for (int x = 0; x < eelies.length; x++) {
-                    if (eelies[x].isAlive == true) {
-                        g.drawImage(eelies[x].pic, eelies[x].xpos, eelies[x].ypos, eelies[x].width, eelies[x].height, null);
-                    }
+                for (int x = eelies.length -1 ; x >= 0; x--) {
+//                    if (eelies[x].isAlive == true) {
+//                        g.drawImage(eelies[x].pic, eelies[x].xpos, eelies[x].ypos, eelies[x].width, eelies[x].height, null);
+//                    }
+                    g.drawImage(eelies[x].pic, eelies[x].xpos, eelies[x].ypos, eelies[x].width, eelies[x].height, null);
+                    System.out.println(eelies[x].xpos+", "+eelies[x].ypos);
+
                 }
                 g.drawRect(eelies[0].eelhit.x, eelies[0].eelhit.y, eelies[0].eelhit.width, eelies[0].eelhit.height);
+                g.drawRect(eelies[0].above.x, eelies[0].above.y, eelies[0].above.width, eelies[0].above.height);
+                g.drawRect(eelies[0].below.x, eelies[0].below.y, eelies[0].below.width, eelies[0].below.height);
+                g.drawRect(eelies[0].right.x, eelies[0].right.y, eelies[0].right.width, eelies[0].right.height);
+                g.drawRect(eelies[0].left.x, eelies[0].left.y, eelies[0].left.width, eelies[0].left.height);
 
                 if (egg.isAlive == true) {
                     g.drawImage(egg.pic, egg.xpos, egg.ypos, egg.width, egg.height, null);
@@ -185,6 +220,7 @@ public class EelGame implements Runnable, KeyListener {
             g.setColor(new Color(40, 92, 132));
             g.setFont(new Font("Hey Comic", Font.PLAIN, 40));
             g.drawString("You lose! Try again!", 350, 100);
+
         }
 
         g.dispose();
