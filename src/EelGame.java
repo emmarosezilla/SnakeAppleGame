@@ -47,7 +47,7 @@ public class EelGame implements Runnable, KeyListener {
         for (int x = 1; x < eelies.length; x++) {
             eelies[x] = new Eel(eelies[x-1].right.x, eelies[x-1].right.y);
             //System.out.println(x * 50 + 300);
-            System.out.println(eelies[x].xpos);
+//            System.out.println(eelies[x].xpos);
             eelies[x].pic = Toolkit.getDefaultToolkit().getImage("eelbody.png");
             eelies[x].isAlive = false;
         }
@@ -74,8 +74,10 @@ public class EelGame implements Runnable, KeyListener {
 
     public void run() {
         while (true) {
-            moveThings();
-            collision();
+            if (gamePlaying == true) {
+                moveThings();
+                collision();
+            }
             render();
             pause(10);
         }
@@ -144,7 +146,7 @@ public class EelGame implements Runnable, KeyListener {
                 eelies[numEels].isAlive = true;
                 numEels++;
                 eatEggSound.play();
-                System.out.println("egggggggg" + numEels);
+//                System.out.println("egggggggg" + numEels);
                 egg.isAlive = false;
                 egg = new Egg();
                 egg.pic = Toolkit.getDefaultToolkit().getImage("egg.png");
@@ -206,8 +208,8 @@ public class EelGame implements Runnable, KeyListener {
                 for (int x = 0; x< eelies.length; x++) {
                     if (eelies[x].isAlive == true) {
                         g.drawImage(eelies[x].pic, eelies[x].xpos, eelies[x].ypos, eelies[x].width, eelies[x].height, null);
-                        g.drawRect(eelies[x].eelhit.x, eelies[x].eelhit.y, eelies[x].eelhit.width, eelies[x].eelhit.height);
-                        System.out.println(x);
+                      //  g.drawRect(eelies[x].eelhit.x, eelies[x].eelhit.y, eelies[x].eelhit.width, eelies[x].eelhit.height);
+//                        System.out.println(x);
                     }
 //                    g.drawImage(eelies[x].pic, eelies[x].xpos, eelies[x].ypos, eelies[x].width, eelies[x].height, null);
 //                    System.out.println(eelies[x].xpos+", "+eelies[x].ypos);
